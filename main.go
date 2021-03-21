@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/aisopclub/voyage/cmd"
+	"voyage/cmd"
 )
 
 func main() {
