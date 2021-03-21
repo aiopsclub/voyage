@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"github.com/aisopclub/voyage/cmd"
 )
 
 func main() {
-	fmt.Println("Voyage")
+	cmd.Execute()
 }
