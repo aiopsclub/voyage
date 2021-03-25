@@ -1,5 +1,7 @@
 package system
 
+var CheckSshConnect = `:`
+
 var DisableSwap = `
 swapoff -a
 sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab 

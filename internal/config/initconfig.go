@@ -1,14 +1,15 @@
 package config
 
-type initConfig struct {
+type InitConfig struct {
 	UserName  string
 	Passwd    string
 	MasterIPs []string
 	NodeIPs   []string
 	Version   string
+	SshPort   string
 }
 
-func NewInitConfig() *initConfig {
-	return &initConfig{}
+func NewInitConfig() *InitConfig {
+	return &InitConfig{}
 
 }

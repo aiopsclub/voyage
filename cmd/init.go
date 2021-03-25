@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"voyage/internal/config"
+	"voyage/pkg/install"
 )
 
 var contactMe = `
@@ -33,8 +34,11 @@ var initCmd = &cobra.Command{
 	--version v1.18.0`,
 	Example: exampleInit,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("%v", initConfig)
 		fmt.Println(contactMe)
+		err := install.Run(initConfig)
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }
 
@@ -44,7 +48,8 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	initCmd.Flags().StringVar(&initConfig.UserName, "username", "root", "servers user name for ssh")
 	initCmd.Flags().StringVar(&initConfig.Passwd, "passwd", "", "password for ssh")
-	initCmd.Flags().StringArrayVar(&initConfig.MasterIPs, "master", []string{}, "kubernetes multi-masters.")
-	initCmd.Flags().StringArrayVar(&initConfig.NodeIPs, "node", []string{}, "kubernetes multi-nodes .")
+	initCmd.Flags().StringSliceVar(&initConfig.MasterIPs, "master", []string{}, "kubernetes multi-masters.")
+	initCmd.Flags().StringSliceVar(&initConfig.NodeIPs, "node", []string{}, "kubernetes multi-nodes .")
 	initCmd.Flags().StringVar(&initConfig.Version, "version", "1.18.0", "kubeadm log level")
+	initCmd.Flags().StringVar(&initConfig.SshPort, "sshport", "22", "ssh port")
 }
