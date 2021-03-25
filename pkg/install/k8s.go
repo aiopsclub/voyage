@@ -9,7 +9,7 @@ import (
 	"voyage/internal/logger"
 	"voyage/internal/ssh"
 	"voyage/pkg/kernel"
-	// "voyage/pkg/system"
+	"voyage/pkg/system"
 )
 
 func Run(initConfig *config.InitConfig) error {
@@ -28,22 +28,26 @@ func Run(initConfig *config.InitConfig) error {
 			return errors.New(fmt.Sprintf("invaild kernel version for %s", masterNode))
 		}
 
-		logger.Logger.Infof("Starting set sysctl for node %s.", masterNode)
-		stdout, stderr, err := setSystcl(masterSsh)
-		if err != nil {
-			logger.Logger.Errorf("stdout: %s, stderr: %s", stdout, stderr)
-			return err
+		logger.Logger.Infof("Starting system init for node %s.", masterNode)
+
+		for opName, opScripts := range system.SystemOperation {
+			logger.Logger.Infof("Starting %s node %s.", opName, masterNode)
+			stdout, stderr, err := scriptRun(masterSsh, opScripts)
+			if err != nil {
+				logger.Logger.Errorf("stdout: %s, stderr: %s", stdout, stderr)
+				return err
+			}
+			logger.Logger.Infof("%s node %s successfully.", opName, masterNode)
 		}
-		logger.Logger.Infof("Set sysctl for node %s successfully.", masterNode)
 
 	}
 	return nil
 }
 
-func setSystcl(client *sshclient.Client) (string, string, error) {
+func scriptRun(client *sshclient.Client, script string) (string, string, error) {
 	stdout := bytes.Buffer{}
 	stderr := bytes.Buffer{}
-	err := client.Script(kernel.DefaultSysCtl).SetStdio(&stdout, &stderr).Run()
+	err := client.Script(script).SetStdio(&stdout, &stderr).Run()
 	if err != nil {
 		return "", "", err
 	}
