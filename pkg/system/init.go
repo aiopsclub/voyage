@@ -18,7 +18,6 @@ iptables -P FORWARD ACCEPT
 `
 var disableSelinux = `
 #!/bin/bash
-set -e
 setenforce 0
 sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
 `
@@ -34,10 +33,10 @@ yum install -y epel-release
 yum install -y chrony conntrack ipvsadm ipset jq iptables curl sysstat libseccomp wget socat git
 `
 
-var SystemOperation = map[string]string{
-	"installDependSoft":  installDependSoft,
-	"disableFirewallod":  disableFirewallod,
-	"disableSelinux":     disableSelinux,
-	"disableSwap":        disableSwap,
-	"setDefaultTimeZone": setDefaultTimeZone,
+var SystemOperation = []map[string]string{
+	{"name": "installDependSoft", "script": installDependSoft},
+	{"name": "disableFirewallod", "script": disableFirewallod},
+	{"name": "disableSelinux", "script": disableSelinux},
+	{"name": "disableSwap", "script": disableSwap},
+	{"name": "setDefaultTimeZone", "script": setDefaultTimeZone},
 }
