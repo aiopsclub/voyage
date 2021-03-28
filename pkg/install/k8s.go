@@ -10,6 +10,7 @@ import (
 	"voyage/internal/logger"
 	"voyage/internal/ssh"
 	"voyage/internal/util"
+	"voyage/pkg/cfssl"
 	"voyage/pkg/kernel"
 	"voyage/pkg/system"
 )
@@ -20,6 +21,11 @@ type Connects struct {
 }
 
 func Run(initConfig *config.InitConfig) error {
+	logger.Logger.Info("Initialize cfssl Toolset...")
+	err := cfssl.CheckAndInstall()
+	if err != nil {
+		return err
+	}
 	masterHostList, err := newMasterHostList(initConfig)
 	if err != nil {
 		return err
